@@ -1,20 +1,28 @@
-name: Update CHANGELOG
+name: Update Changelog
 on:
   release:
     types: [created, edited]
   workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
 
 jobs:
-  generate-changelog:
+  update-changelog:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout the Repository
+      uses: actions/checkout@v2
+    - name: Build the Changelog
+      uses: ardalanamini/auto-changelog@v4
+      id: build-changelog
       with:
-        fetch-depth: 0
-    - uses: BobAnkh/auto-generate-changelog@v1.2.5
-      with:
-        REPO_NAME: 'nicrie/xeofs'
-        ACCESS_TOKEN: ${{ secrets.CHANGELOG_TOKEN }}
-        PATH: 'CHANGELOG.md'
-        COMMIT_MESSAGE: 'docs(CHANGELOG): update release notes'
-        TYPE: 'feat:Feature,fix:Bug Fixes,docs:Documentation,refactor:Refactor,perf:Performance Improvements'
+        github-token: ${{ github.token }}
+        commit-types: |
+          feature: 🌟 New Features
+          fix: 🐞 Bug Fixes
+          perf: 🚀 Performance Improvements
+          docs: 📖 Documentation
+          build: 🔨 Build Adjustments
+          test: 📛 Tests
+          ci: 🔄 Continuous Integrations
+          refactor: 📎 Refactored
+          style: 🎨 Code Style Adjustments
+        default-commit-type: 📂 Other Adjustments
